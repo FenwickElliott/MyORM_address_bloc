@@ -40,7 +40,7 @@ class BlocRecord
     end
 
     def schema(title = @table)
-        unless @schema 
+        # unless @schema 
             begin
                 @schema = {}
                 db.table_info(title).each do |row|
@@ -50,7 +50,7 @@ class BlocRecord
             rescue => e
                 puts e
             end
-        end
+        # end
         @schema
     end
 
@@ -111,6 +111,23 @@ class BlocRecord
             res[k] = row[i]
         end
         res
+    end
+
+    def conventional_join(title = @table, joins)
+        scm = schema(title).keys
+        scm.map! {|k| "#{title}.#{k}"}
+        cmd = "SELECT * FROM #{title}"
+        joins.each do |join|
+            t = schema(join).keys
+            t.map! {|k| "#{join}.#{k}"}
+            scm += t
+            # puts schema(join)
+            cmd << " INNER JOIN #{join} ON #{title}.#{join}_id = #{join}.id"
+        end
+        cmd << ';'
+
+        puts scm.inspect
+        db.execute cmd
     end
 
     def print_table(title = @table)
