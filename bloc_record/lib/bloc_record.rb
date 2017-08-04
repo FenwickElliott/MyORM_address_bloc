@@ -124,7 +124,25 @@ class BlocRecord
             # puts schema(join)
             cmd << "INNER JOIN #{join} ON #{title}.#{join}_id = #{join}.id "
         end
-        cmd << "ORDER BY #{title}.name ASC"
+        cmd << "ORDER BY #{title}.name ASC;"
+
+        # puts scm.inspect
+        db.execute cmd
+    end
+
+    def conventional_join_where(title = @table, joins, clause)
+        scm = schema(title).keys
+        scm.map! {|k| "#{title}.#{k}"}
+        cmd = "SELECT * FROM #{title} "
+        joins.each do |join|
+            t = schema(join).keys
+            t.map! {|k| "#{join}.#{k}"}
+            scm += t
+            # puts schema(join)
+            cmd << "INNER JOIN #{join} ON #{title}.#{join}_id = #{join}.id "
+        end
+        cmd << "WHERE #{clause} "
+        cmd << "ORDER BY #{title}.name ASC;"
 
         # puts scm.inspect
         db.execute cmd
@@ -143,7 +161,7 @@ class BlocRecord
         res = db.execute <<-SQL
             SELECT * FROM #{title} WHERE #{condition};
         SQL
-        res.each {|row| puts row.inspect}
+        # res.each {|row| puts row.inspect}
     end
 
     def query(conditions, title = @table)

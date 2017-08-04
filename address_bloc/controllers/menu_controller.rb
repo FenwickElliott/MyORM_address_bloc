@@ -9,6 +9,7 @@ class MenuController < BlocRecord
   def main_menu
     set unless @set_up
     puts "Main Menu - #{self.count('entry')} entries"
+    puts "0 - View an address book"
     puts "1 - View all entries"
     puts "2 - Create an entry"
     puts "3 - Search for an entry"
@@ -19,6 +20,10 @@ class MenuController < BlocRecord
     selection = gets.to_i
 
     case selection
+      when 0
+        system "clear"
+        view_address_book
+        main_menu
       when 1
         system "clear"
         view_all_entries
@@ -47,6 +52,31 @@ class MenuController < BlocRecord
         puts "Sorry, that is not a valid input"
         main_menu
       end
+  end
+
+  def view_address_book(j = 0)
+    puts "Which Address Book would you like to see?\n"
+
+    books = get_table('address_book')
+    
+    books.each_with_index do |book, i|
+      puts "#{i}. #{book[1]}"
+    end
+
+    ab = gets.to_i
+
+    puts ab = find("address_book", "name", books[ab][1])[0]
+
+    res = conventional_join_where('entry', ['address_book'], "entry.address_book_id = #{ab}")
+
+    for i in j...res.length
+      system 'clear'
+      puts "Name: #{res[i][2]}\nPhone Number: #{res[i][3]}\nEmail: #{res[i][4]}\nAddress Book: #{res[i][6]}"
+      gets
+    end
+    system "clear"
+    puts "End of entries"
+    main_menu
   end
 
   def view_all_entries(j = 0)
