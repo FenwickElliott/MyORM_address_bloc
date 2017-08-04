@@ -136,9 +136,7 @@ class BlocRecord
     end
 
     def find(title = @table, attribute, value)
-        res = db.execute <<-SQL
-            SELECT * FROM #{title} WHERE #{attribute} = '#{value}';
-        SQL
+        res = db.execute("SELECT * FROM #{title} WHERE #{attribute} = '#{value}';")[0]
     end
 
     def filter(title = @table, condition)

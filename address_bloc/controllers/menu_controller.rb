@@ -50,10 +50,7 @@ class MenuController < BlocRecord
   end
 
   def view_all_entries(j = 0)
-    # res = self.get_table('entry')
-    # res = ordered_table('entry', "name ASC")
     res = conventional_join('entry', ['address_book'])
-
     for i in j...res.length
       system 'clear'
       puts "Name: #{res[i][2]}\nPhone Number: #{res[i][3]}\nEmail: #{res[i][4]}\nAddress Book: #{res[i][6]}"
@@ -73,9 +70,18 @@ class MenuController < BlocRecord
     phone = gets.chomp
     print "Email: "
     email = gets.chomp
+    print "Address Book: "
+    address_book = gets.chomp
+
+    begin
+      ab = find("address_book", "name", address_book)[0]
+    rescue
+      self.insert("address_book", {name: address_book})
+      ab = find("address_book", "name", address_book)[0]
+    end
 
     self.insert('entry',{
-      address_book_id: 1,
+      address_book_id: ab,
       name: name,
       phone_number: phone,
       email: email
@@ -163,11 +169,23 @@ class MenuController < BlocRecord
     phone_number = gets.chomp
     print "Updated email: "
     email = gets.chomp
+    print "Address Book: "
+    address_book = gets.chomp
 
     data = {}
     data['name'] = name if name.length > 0
     data['phone_number'] = phone_number if phone_number.length > 0
     data['email'] = email if email.length > 0
+
+    if address_book.length > 0
+      begin
+        ab = find("address_book", "name", address_book)[0]
+      rescue
+        self.insert("address_book", {name: address_book})
+        ab = find("address_book", "name", address_book)[0]
+      end
+      data['address_book_id'] = ab
+    end
 
     self.update('entry', entry_id, data)
 
