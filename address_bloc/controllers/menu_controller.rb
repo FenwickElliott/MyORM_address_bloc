@@ -51,11 +51,12 @@ class MenuController < BlocRecord
 
   def view_all_entries(j = 0)
     # res = self.get_table('entry')
-    res = ordered_table('entry', "name ASC")
+    # res = ordered_table('entry', "name ASC")
+    res = conventional_join('entry', ['address_book'])
 
     for i in j...res.length
       system 'clear'
-      puts "Name: #{res[i][2]}\nPhone Number: #{res[i][3]}\nEmail: #{res[i][4]}"
+      puts "Name: #{res[i][2]}\nPhone Number: #{res[i][3]}\nEmail: #{res[i][4]}\nAddress Book: #{res[i][6]}"
       entry_submenu(res[i][0])
     end
     system "clear"

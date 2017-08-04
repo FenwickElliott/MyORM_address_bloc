@@ -116,17 +116,17 @@ class BlocRecord
     def conventional_join(title = @table, joins)
         scm = schema(title).keys
         scm.map! {|k| "#{title}.#{k}"}
-        cmd = "SELECT * FROM #{title}"
+        cmd = "SELECT * FROM #{title} "
         joins.each do |join|
             t = schema(join).keys
             t.map! {|k| "#{join}.#{k}"}
             scm += t
             # puts schema(join)
-            cmd << " INNER JOIN #{join} ON #{title}.#{join}_id = #{join}.id"
+            cmd << "INNER JOIN #{join} ON #{title}.#{join}_id = #{join}.id "
         end
-        cmd << ';'
+        cmd << "ORDER BY #{title}.name ASC"
 
-        puts scm.inspect
+        # puts scm.inspect
         db.execute cmd
     end
 
