@@ -50,8 +50,8 @@ class MenuController < BlocRecord
       when 6
         entries
         books
-        class_up(entries, 'entries')
-        class_up(books, 'books')
+        class_up(entries, 'entry')
+        class_up(books, 'address_book')
         binding.pry
         system 'clear'
         main_menu

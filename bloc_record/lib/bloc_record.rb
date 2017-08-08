@@ -2,7 +2,7 @@ require 'sqlite3'
 require_relative 'bloc_record/associations'
 
 class BlocRecord
-    attr_accessor :table
+    attr_accessor :table, :is_a, :id
     include Associations
 
     def initialize
