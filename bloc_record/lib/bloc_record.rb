@@ -1,11 +1,13 @@
 require 'sqlite3'
+require_relative 'bloc_record/associations'
 
 class BlocRecord
     attr_accessor :table
+    include Associations
 
-    def initialize(default_table)
+    def initialize
         @db = SQLite3::Database.new(".data.db")
-        @table = (default_table)
+        @table = 'base'
     end
 
     def bark
@@ -111,6 +113,14 @@ class BlocRecord
             res[k] = row[i]
         end
         res
+    end
+
+    def objectify_table(title = @table)
+        tbl = []
+        for i in 1..count(title)
+            tbl << objectify_row(title, i)
+        end
+        tbl
     end
 
     def conventional_join(title = @table, joins)
