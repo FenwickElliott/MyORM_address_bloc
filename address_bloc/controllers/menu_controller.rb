@@ -1,10 +1,13 @@
 require_relative '../models/address_book'
 require 'bloc_record'
 require_relative 'integrate'
+require_relative 'associations'
+require 'pry'
 
 class MenuController < BlocRecord
   attr_reader :address_book
   include Integrate
+  include Associations
 
   def main_menu
     set unless @set_up
@@ -15,6 +18,7 @@ class MenuController < BlocRecord
     puts "3 - Search for an entry"
     puts "4 - Import entries from a CSV"
     puts "5 - Exit"
+    puts "6 - pry"
     print "Enter your selection: "
 
     selection = gets.to_i
@@ -43,6 +47,14 @@ class MenuController < BlocRecord
       when 5
         puts "Good-bye!"
         exit(0)
+      when 6
+        entries
+        books
+        class_up(entries, 'entries')
+        class_up(books, 'books')
+        binding.pry
+        system 'clear'
+        main_menu
       when 666
         drop_tables
         system "clear"
